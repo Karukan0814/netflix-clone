@@ -1,0 +1,19 @@
+.cardSectionContainer {
+  padding: 0 1rem;
+  background-color: var(--black50);
+}
+
+.sectionTitle {
+  color: var(--white10);
+  font-weight: 700;
+}
+
+.cardsWrapper {
+  display: flex;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  padding-top: 1.7rem;
+  padding-bottom: 1.5rem;
+  margin-top: 1.5rem /* 24px */;
+  margin-right: 0.75rem /* 12px */;
+}

@@ -1,0 +1,89 @@
+.navBarContainer {
+  padding: 0;
+  margin: 0 auto;
+  width: 100%;
+  position: fixed;
+  top: 0px;
+  background-image: linear-gradient(to bottom, var(--gradient-stops));
+
+  --gradient-from: var(--black);
+  --gradient-stops: var(--gradient-from), var(--gradient-to, rgba(0, 0, 0, 0));
+  z-index: 50;
+}
+.navBarWrapper {
+  padding-left: 1rem /* 16px */;
+  padding-right: 1rem /* 16px */;
+  display: flex;
+  padding: 1.25rem /* 20px */;
+}
+.logoWrapper {
+  width: 8rem /* 128px */;
+  height: 2rem;
+  position: relative;
+}
+.logoLink {
+  display: flex;
+  font-weight: 500;
+  font-size: 1rem;
+  align-items: center;
+  color: var(--red);
+  margin-bottom: 1rem /* 16px */;
+  width: 100%;
+  height: 100%;
+}
+.logoImg {
+  width: 100%;
+  position: relative;
+  height: unset;
+}
+.navItems {
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  margin-left: 1.5rem /* 24px */;
+  font-size: 0.875rem /* 14px */;
+  font-size: 1rem;
+
+  line-height: 1.25rem /* 20px */;
+  list-style: none;
+}
+.navItem {
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-right: 0.75rem /* 12px */;
+}
+.navContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: auto;
+}
+.userNameWrapper {
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+.userNameBtn {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  color: var(--white);
+}
+
+.navDropdown {
+  margin-top: 0.5rem /* 8px */;
+  padding: 0.5rem 1rem /* 8px */;
+  background-color: var(--black50);
+  border-width: 1px;
+  color: var(--white);
+  border-radius: 0.25rem /* 4px */;
+
+  border-color: var(--blue);
+
+  box-shadow: var(--shadow30, 0 0 #0000), var(--ring-shadow, 0 0 #0000),
+    var(--shadow30);
+}
+
+.testSVG {
+  fill: "green";
+}
