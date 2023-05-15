@@ -30,19 +30,6 @@ export default function login() {
   };
 
   useEffect(() => {
-    const handleComplete = () => {
-      setIsLoading(false);
-    };
-    router.events.on("routeChangeComplete", handleComplete);
-    router.events.on("routeChangeError", handleComplete);
-
-    return () => {
-      router.events.off("routeChangeComplete", handleComplete);
-      router.events.off("routeChangeError", handleComplete);
-    };
-  }, [router]);
-
-  useEffect(() => {
     const login = async () => {
       const loginResult = await loginAfterLink();
       if (loginResult) {
