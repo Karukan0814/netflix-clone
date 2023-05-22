@@ -7,6 +7,7 @@ import {
   youtube_v3, // For every service client, there is an exported namespace
 } from "googleapis";
 import { cardSize } from "@/lib/type/cardSizeTypes";
+import Link from "next/link";
 
 type Props = {
   title: string;
@@ -26,8 +27,18 @@ export const SectionCard = (props: Props) => {
           if (!imgUrl) {
             imgUrl = "/static/ゆきこ２.png";
           }
+          let id;
+          if (typeof el.id === "string") {
+            id = el.id;
+          } else {
+            id = el.id?.videoId;
+          }
 
-          return <Card key={index} size={size} imgUrl={imgUrl} />;
+          return (
+            <Link href={`/video/${id}`} key={id}>
+              <Card key={id} size={size} imgUrl={imgUrl} />;
+            </Link>
+          );
         })}
       </div>
     </section>

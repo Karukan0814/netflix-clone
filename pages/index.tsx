@@ -3,10 +3,7 @@ import styles from "../styles/Home.module.css";
 import { Banner } from "@/component/Banner";
 import { NavBar } from "@/component/NavBar";
 import { SectionCard } from "@/component/SectionCard";
-import {
-  searchPopularVideos,
-  searchYoutubeList,
-} from "@/lib/SearchYoutubeData";
+import { searchVideos, searchYoutubeList } from "@/lib/SearchYoutubeData";
 import {
   youtube_v3, // For every service client, there is an exported namespace
 } from "googleapis";
@@ -20,7 +17,7 @@ export async function getServerSideProps() {
   const productivityVideos = await searchYoutubeList("Productivity");
   const travelVideos = await searchYoutubeList("Travel");
 
-  const popularVideos = await searchPopularVideos();
+  const popularVideos = await searchVideos(true);
 
   return {
     props: {
@@ -43,6 +40,10 @@ export default function Home(props: Props) {
   const { disneyVideos, productivityVideos, travelVideos, popularVideos } =
     props;
 
+  const bannerTitle = "平家物語";
+  const bannerId = "ZW40VnNrowY";
+  const bannerImg = "https://i.ytimg.com/vi/ZW40VnNrowY/sddefault.jpg";
+
   return (
     <>
       <Head>
@@ -51,11 +52,12 @@ export default function Home(props: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={styles.main}>
-        <NavBar userName="Saori" />
+        <NavBar />
         <Banner
-          title="Yukiko The Movie"
-          subTitle="Yukiko is a perfect girl!"
-          imgUrl="/static/ゆきこ１.png"
+          id={bannerId}
+          title={bannerTitle}
+          subTitle="Hot now!"
+          imgUrl={bannerImg}
         />
         <div className={styles.sectionWrapper}>
           <SectionCard title="Disney" videoInfos={disneyVideos} size="L" />

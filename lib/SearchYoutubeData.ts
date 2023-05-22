@@ -34,18 +34,36 @@ export const searchYoutubeList = async (query: string) => {
   return response;
 };
 
-export const searchPopularVideos = async () => {
+type Condition = {
+  part: string[];
+  maxResults: number;
+  regionCode: string;
+  key: string | undefined;
+  chart?: string;
+  id?: string[];
+};
+
+const defaultCondition: Condition = {
+  part: ["snippet", "statistics"],
+  maxResults: 10,
+  regionCode: "jp",
+  key: process.env.NEXT_PUBLIC_YOUTUBE_API_KEY,
+};
+
+export const searchVideos = async (popularFlag: boolean, id?: string) => {
   const service = google.youtube("v3");
+
+  let searchCondition = { ...defaultCondition };
+  if (popularFlag) {
+    searchCondition.chart = "mostPopular";
+  }
+  if (id) {
+    searchCondition.id = [id];
+  }
 
   // Search.listメソッドの呼び出し
   const response = await service.videos
-    .list({
-      part: ["snippet"],
-      chart: "mostPopular",
-      maxResults: 10,
-      regionCode: "jp",
-      key: apiKey,
-    })
+    .list(searchCondition)
     .then((response) => {
       var results = response.data;
 

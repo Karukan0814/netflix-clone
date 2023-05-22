@@ -2,6 +2,10 @@
   width: 100%;
   height: 80vh;
   position: relative;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
   background-image: linear-gradient(
       103.24deg,
       rgba(0, 8, 29, 0.9) 23.83%,
@@ -18,6 +22,20 @@
 
 .bannerTitleWrapper {
   width: 100%;
+}
+.title {
+  font-size: 3.75rem;
+  line-height: 1;
+  font-weight: 800;
+  color: var(--white10);
+  -webkit-text-stroke: 2px var(--black); /* width and color */
+}
+
+.subTitle {
+  font-size: 1.5rem /* 18px */;
+  line-height: 2rem /* 28px */;
+  color: var(--white10);
+  -webkit-text-stroke: 1px gray; /* width and color */
 }
 
 .play_arrow_icon {
