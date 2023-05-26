@@ -93,7 +93,8 @@ export default function Video(props: Props) {
       });
 
       res.json().then((val) => {
-        if (val.videoInfos.length > 0) {
+        if (val.videoInfos && val.videoInfos.length > 0) {
+          //既にHasuraにvideoの情報が登録されていたらセット
           setFavorited(val.videoInfos[0].favorited);
           setWatched(val.videoInfos[0].watched);
         }
