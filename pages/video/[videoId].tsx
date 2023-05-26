@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import styles from "../../styles/video.module.css";
-import { searchVideos } from "@/lib/SearchYoutubeData";
+import { searchVideos } from "@/lib/VideoData";
 import { GetStaticPropsContext } from "next";
 import { youtube_v3 } from "googleapis";
 import { NavBar } from "@/component/NavBar";

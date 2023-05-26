@@ -2,6 +2,7 @@ import {
   google, // The top level object used to access services
   youtube_v3, // For every service client, there is an exported namespace
 } from "googleapis";
+import { getWatchedVideobyUser } from "./db/hasura";
 
 const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 //   const [videoList, seTVideoList] = useState<VideoInfo>();
@@ -79,4 +80,12 @@ export const searchVideos = async (popularFlag: boolean, id?: string) => {
     .finally();
 
   return response;
+};
+
+export const getWatchedVideoFromHasura = async (
+  token: string,
+  userId: string
+) => {
+  const watchedVideoList = await getWatchedVideobyUser(token, userId);
+  return watchedVideoList;
 };

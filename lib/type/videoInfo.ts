@@ -6,3 +6,12 @@ export type VideoInfoStats = {
   favorited: Favorited;
   watched: boolean;
 };
+
+export type VideoDataDisplay = {
+  title: string;
+  imgUrl: string;
+  description: string;
+  publishTime: Date;
+  channelTitle: string;
+  statistics: number;
+};
