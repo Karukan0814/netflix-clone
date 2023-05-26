@@ -24,7 +24,6 @@ export const NavBar = () => {
     // e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
-    console.log("handleSignOut");
     e.preventDefault();
     try {
       console.log(await magic?.user.isLoggedIn()); // => `false`
@@ -42,10 +41,8 @@ export const NavBar = () => {
     const getUser = async () => {
       try {
         const user = await magic?.user.getMetadata();
-        console.log(user);
         const email = user?.email;
         email && setUser(email);
-        console.log(email);
       } catch {
         console.log("Failed Retrieving userdata");
       }

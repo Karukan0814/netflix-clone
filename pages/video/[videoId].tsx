@@ -13,13 +13,14 @@ Modal.setAppElement("#__next");
 
 export async function getStaticProps(staticProps: GetStaticPropsContext) {
   const { params } = staticProps;
-  console.log({ params });
-  let video = null;
+  let videoList;
   if (params && params.videoId) {
-    video = await searchVideos(false, params.videoId.toString());
+    videoList = await searchVideos(false, params.videoId.toString());
   }
-  console.log({ video });
-
+  let video = null;
+  if (videoList && videoList.items) {
+    video = videoList.items[0];
+  }
   return {
     props: {
       video: video,
@@ -38,20 +39,46 @@ export async function getStaticPaths() {
 }
 
 type Props = {
-  video: youtube_v3.Schema$VideoListResponse | null;
+  video: youtube_v3.Schema$Video | null;
 };
 
 export default function Video(props: Props) {
   const router = useRouter();
+  const { video } = props;
+
   const { videoId } = router.query;
-  const [videoInfo, setVideoInfo] = useState<youtube_v3.Schema$Video | null>(
-    null
-  );
+  // const [videoInfo, setVideoInfo] = useState<youtube_v3.Schema$Video | null>(
+  //   null
+  // );
   const [error, setError] = useState("");
   const [favorited, setFavorited] = useState<Favorited>(null);
   const [watched, setWatched] = useState(false);
 
-  const { video } = props;
+  const handleLikeflag = () => {
+    let changedVal: Favorited = favorited === 1 ? null : 1;
+
+    setFavorited(changedVal);
+    updateFavoriteFlag(changedVal);
+  };
+  const handleDislikeflag = () => {
+    let changedVal: Favorited = favorited === 0 ? null : 0;
+
+    setFavorited(changedVal);
+    updateFavoriteFlag(changedVal);
+  };
+
+  const updateFavoriteFlag = async (changedVal: Favorited) => {
+    const res = await fetch("/api/stats", {
+      method: "POST",
+      body: JSON.stringify({
+        videoId,
+        favourited: changedVal,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
 
   useEffect(() => {
     console.log("useEffect videoId");
@@ -64,28 +91,15 @@ export default function Video(props: Props) {
           "Content-Type": "application/json",
         },
       });
-      // const videoInfos: VideoInfoStats[] = await res.json();
-      // console.log({ videoInfos });
-      // if (videoInfos.length > 0) {
-      //   setFavorited(videoInfos[0].favorited);
-      //   setWatched(videoInfos[0].watched);
-      // }
 
-      res.json().then((val: VideoInfoStats[]) => {
-        console.log({ val });
-        if (val.length > 0) {
-          setFavorited(val[0].favorited);
-          setWatched(val[0].watched);
+      res.json().then((val) => {
+        if (val.videoInfos.length > 0) {
+          setFavorited(val.videoInfos[0].favorited);
+          setWatched(val.videoInfos[0].watched);
         }
       });
     };
     fetchVideoUserInfo();
-
-    if (video && video.items) {
-      setVideoInfo(video.items[0]);
-    } else {
-      setError("data fetching error");
-    }
   }, [videoId]);
 
   return (
@@ -110,7 +124,11 @@ export default function Video(props: Props) {
             frameBorder="0"
           ></iframe>
           <div className={styles.likeDislikeWrapper}>
-            <LikeIcon videoId={videoId?.toString()!} favourited={favorited} />
+            <LikeIcon
+              handleLikeflag={handleLikeflag}
+              handleDislikeflag={handleDislikeflag}
+              favorited={favorited}
+            />
           </div>
         </div>
 
@@ -118,25 +136,25 @@ export default function Video(props: Props) {
           <div className={styles.modalBodyContent}>
             <div className={styles.modalBodyCol1}>
               <p className={styles.publishTime}>
-                {videoInfo?.snippet?.publishedAt}
+                {video?.snippet?.publishedAt}
               </p>
-              <p className={styles.title}>{videoInfo?.snippet?.title}</p>
+              <p className={styles.title}>{video?.snippet?.title}</p>
               <p className={styles.description}>
-                {videoInfo?.snippet?.description}
+                {video?.snippet?.description}
               </p>
             </div>
             <div className={styles.modalBodyCol2}>
               <div className={styles.subTextWrapper}>
                 <p className={styles.subText}>
                   <span className={styles.subTextTitle}>
-                    ViewCount:{videoInfo?.statistics?.viewCount}
+                    ViewCount:{video?.statistics?.viewCount}
                   </span>
                   <span className={styles.subTextContent}></span>
                 </p>
               </div>
               <p className={styles.subText}>
                 <span className={styles.subTextTitle}>
-                  Cast:{videoInfo?.snippet?.channelTitle}
+                  Cast:{video?.snippet?.channelTitle}
                 </span>
                 <span className={styles.subTextContent}></span>
               </p>
