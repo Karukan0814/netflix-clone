@@ -7,6 +7,7 @@ import { GetStaticPropsContext } from "next";
 import { youtube_v3 } from "googleapis";
 import { NavBar } from "@/component/NavBar";
 import { LikeIcon } from "@/component/icons/LikeIcon";
+import { Favorited, VideoInfoStats } from "@/lib/type/videoInfo";
 
 Modal.setAppElement("#__next");
 
@@ -47,17 +48,46 @@ export default function Video(props: Props) {
     null
   );
   const [error, setError] = useState("");
+  const [favorited, setFavorited] = useState<Favorited>(null);
+  const [watched, setWatched] = useState(false);
 
   const { video } = props;
 
   useEffect(() => {
+    console.log("useEffect videoId");
+    const fetchVideoUserInfo = async () => {
+      console.log("fetchVideoUserInfo");
+      const res = await fetch(`/api/stats?videoId=${videoId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      // const videoInfos: VideoInfoStats[] = await res.json();
+      // console.log({ videoInfos });
+      // if (videoInfos.length > 0) {
+      //   setFavorited(videoInfos[0].favorited);
+      //   setWatched(videoInfos[0].watched);
+      // }
+
+      res.json().then((val: VideoInfoStats[]) => {
+        console.log({ val });
+        if (val.length > 0) {
+          setFavorited(val[0].favorited);
+          setWatched(val[0].watched);
+        }
+      });
+    };
+    fetchVideoUserInfo();
+
     if (video && video.items) {
-      console.log({ video });
       setVideoInfo(video.items[0]);
     } else {
-      setError("data fetchinf error");
+      setError("data fetching error");
     }
-  }, []);
+  }, [videoId]);
+
   return (
     <div className={styles.container}>
       <NavBar />
@@ -80,7 +110,7 @@ export default function Video(props: Props) {
             frameBorder="0"
           ></iframe>
           <div className={styles.likeDislikeWrapper}>
-            <LikeIcon />
+            <LikeIcon videoId={videoId?.toString()!} favourited={favorited} />
           </div>
         </div>
 

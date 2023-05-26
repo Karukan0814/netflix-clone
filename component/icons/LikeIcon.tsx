@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./LikeIcon.module.css";
+import { Favorited } from "@/lib/type/videoInfo";
 
-export const LikeIcon = () => {
+type Props = { videoId: string; favourited: Favorited };
+
+export const LikeIcon = (props: Props) => {
+  const { videoId, favourited } = props;
   const [likeFlag, setLikeflag] = useState(false);
   const [dislikeFlag, setDisikeflag] = useState(false);
 
@@ -15,6 +19,7 @@ export const LikeIcon = () => {
       setDisikeflag(false);
       setLikeflag(true);
     }
+    updateFavoriteFlag(likeFlag ? null : 1);
   };
   const handleDislikefalg = () => {
     if (dislikeFlag) {
@@ -26,7 +31,31 @@ export const LikeIcon = () => {
       setLikeflag(false);
       setDisikeflag(true);
     }
+
+    updateFavoriteFlag(dislikeFlag ? null : 0);
   };
+
+  const updateFavoriteFlag = async (changedVal: Favorited) => {
+    const res = await fetch("/api/stats", {
+      method: "POST",
+      body: JSON.stringify({
+        videoId,
+        favourited: changedVal,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
+  useEffect(() => {
+    console.log({ favourited });
+    if (favourited === 0) {
+      setDisikeflag(true);
+    } else if (favourited === 1) {
+      setLikeflag(true);
+    }
+  }, []);
   return (
     <>
       <button className={styles.BtnWrapper} onClick={handleLikefalg}>

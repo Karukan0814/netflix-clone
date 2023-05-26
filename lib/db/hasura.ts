@@ -1,4 +1,99 @@
 import { MagicUserMetadata } from "magic-sdk";
+import { VideoInfoStats } from "../type/videoInfo";
+
+export async function insertStats(
+  token: string,
+  userId: string,
+  favorited: number,
+  watched: boolean,
+  videoId: string
+) {
+  console.log("insertStats");
+  const operationsDoc = `
+  mutation insertStats($favorited: Int!, $userId: 
+  String!, $watched: Boolean!, $videoId: String!) {
+    insert_stats_one(object: {favorited: $favorited,  userId: $userId, videoId: $videoId, watched: $watched}) {
+      favorited
+      id
+      userId
+      videoId
+      watched
+    }
+  }
+`;
+  const response = await fetchGraphQL(
+    operationsDoc,
+    "insertStats",
+    { favorited, userId, videoId, watched },
+    token
+  );
+  const insetData: VideoInfoStats = response.data.insert_stats_one;
+  console.log(insetData);
+  return insetData;
+}
+
+export async function updateStats(
+  token: string,
+  userId: string,
+  favorited: number,
+  watched: boolean,
+  videoId: string
+) {
+  console.log("updateStats");
+  const operationsDoc = `
+  mutation updateStats($favorited: Int!, $userId: String!, $watched: Boolean!, $videoId: String!) {
+    update_stats(where: {userId: {_eq: $userId}, videoId: {_eq: $videoId}}, _set: {favorited: $favorited, watched: $watched}) {
+      affected_rows
+      returning {
+        favorited
+        id
+        userId
+        videoId
+        watched
+      }
+    }
+  }
+`;
+  console.log({ favorited, userId, watched, videoId });
+  const response = await fetchGraphQL(
+    operationsDoc,
+    "updateStats",
+    { favorited, userId, watched, videoId },
+    token
+  );
+
+  const updateRowData: VideoInfoStats[] = response.data.update_stats.returning;
+  console.log(updateRowData);
+  return updateRowData;
+}
+
+export async function findVideobyUser(
+  token: string,
+  userId: string,
+  videoId: string
+) {
+  console.log("findVideobyUser");
+  const operation = `
+  query findVideo($userId:String!,$videoId:String!) {
+    stats(where: {userId: {_eq: $userId}, videoId: {_eq: $videoId}}) {
+      userId
+      favorited
+      videoId
+      watched
+    }
+  }
+`;
+
+  const response = await fetchGraphQL(
+    operation,
+    "findVideo",
+    { userId, videoId },
+    token
+  );
+  console.log(response?.data);
+  const resVideoInfos: VideoInfoStats[] = response?.data?.stats;
+  return resVideoInfos;
+}
 
 export async function createNewUser(
   token: string,
