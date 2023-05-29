@@ -2,7 +2,6 @@ import { MagicUserMetadata } from "magic-sdk";
 import { VideoInfoStats } from "../type/videoInfo";
 
 export async function getMyListbyUserId(token: string, userId: string) {
-  console.log("getMyListbyUserId");
   const operation = `
   query getMyListbyUserId ($userId: 
     String!){
@@ -21,13 +20,15 @@ export async function getMyListbyUserId(token: string, userId: string) {
     { userId },
     token
   );
-  console.log(response?.data);
-  const resVideoInfos: VideoInfoStats[] = response?.data?.stats;
-  return resVideoInfos;
+  if (response.data && response.data.stats) {
+    const resVideoInfos: VideoInfoStats[] = response?.data?.stats;
+    return resVideoInfos;
+  } else {
+    return null;
+  }
 }
 
 export async function getWatchedVideobyUser(token: string, userId: string) {
-  console.log("getWatchedVideobyUser");
   const operation = `
   query getWatchedVideo ($userId: 
     String!){
@@ -46,9 +47,12 @@ export async function getWatchedVideobyUser(token: string, userId: string) {
     { userId },
     token
   );
-  console.log(response?.data);
-  const resVideoInfos: VideoInfoStats[] = response?.data?.stats;
-  return resVideoInfos;
+  if (response.data && response.data.stats) {
+    const resVideoInfos: VideoInfoStats[] = response?.data?.stats;
+    return resVideoInfos;
+  } else {
+    return null;
+  }
 }
 
 export async function insertStats(
@@ -58,7 +62,6 @@ export async function insertStats(
   watched: boolean,
   videoId: string
 ) {
-  console.log("insertStats");
   const operationsDoc = `
   mutation insertStats($favorited: Int!, $userId: 
   String!, $watched: Boolean!, $videoId: String!) {
@@ -78,7 +81,6 @@ export async function insertStats(
     token
   );
   const insetData: VideoInfoStats = response.data.insert_stats_one;
-  console.log(insetData);
   return insetData;
 }
 
@@ -89,7 +91,6 @@ export async function updateStats(
   watched: boolean,
   videoId: string
 ) {
-  console.log("updateStats");
   const operationsDoc = `
   mutation updateStats($favorited: Int!, $userId: String!, $watched: Boolean!, $videoId: String!) {
     update_stats(where: {userId: {_eq: $userId}, videoId: {_eq: $videoId}}, _set: {favorited: $favorited, watched: $watched}) {
@@ -104,7 +105,6 @@ export async function updateStats(
     }
   }
 `;
-  console.log({ favorited, userId, watched, videoId });
   const response = await fetchGraphQL(
     operationsDoc,
     "updateStats",
@@ -113,7 +113,6 @@ export async function updateStats(
   );
 
   const updateRowData: VideoInfoStats[] = response.data.update_stats.returning;
-  console.log(updateRowData);
   return updateRowData;
 }
 
@@ -122,7 +121,6 @@ export async function findVideobyUser(
   userId: string,
   videoId: string
 ) {
-  console.log("findVideobyUser");
   const operation = `
   query findVideo($userId:String!,$videoId:String!) {
     stats(where: {userId: {_eq: $userId}, videoId: {_eq: $videoId}}) {
@@ -140,16 +138,18 @@ export async function findVideobyUser(
     { userId, videoId },
     token
   );
-  console.log(response?.data);
-  const resVideoInfos: VideoInfoStats[] = response?.data?.stats;
-  return resVideoInfos;
+  if (response && response.data) {
+    const resVideoInfos: VideoInfoStats[] = response?.data?.stats;
+    return resVideoInfos;
+  } else {
+    return null;
+  }
 }
 
 export async function createNewUser(
   token: string,
   metadata: MagicUserMetadata
 ) {
-  console.log("createNewUser");
   const operationsDoc = `
   mutation insertUser($email:String!,$issuer:String!,$publicAddress:String!) {
     insert_users(objects: {email: $email, issuer: $issuer,  publicAddress: $publicAddress}) {
@@ -170,12 +170,10 @@ export async function createNewUser(
     token
   );
 
-  console.log(response.data);
   return response?.data?.users?.length === 0;
 }
 
 export async function isNewUser(token: string, issuer: string) {
-  console.log("isNewUser");
   const operation = `
     query isNewUser($issuer:String!) {
         users(where: {issuer: {_eq: $issuer}}) {
@@ -192,7 +190,6 @@ export async function isNewUser(token: string, issuer: string) {
     { issuer },
     token
   );
-  console.log(response?.data);
   return response?.data?.users?.length === 0;
 }
 
@@ -202,7 +199,6 @@ function fetchGraphQL(
   variables: Record<string, any>,
   token: string
 ) {
-  console.log(process.env.NEXT_PUBLIC_HASURA_URL);
   return fetch(process.env.NEXT_PUBLIC_HASURA_URL!, {
     method: "POST",
     headers: {

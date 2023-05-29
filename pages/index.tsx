@@ -6,7 +6,7 @@ import {
   getWatchedVideoFromHasura,
   searchYoutubeList,
   searchYoutubeVideos,
-} from "@/lib/VideoData";
+} from "@/lib/videoData";
 import Head from "next/head";
 import { VideoDataForSection } from "@/lib/type/videoInfo";
 import { GetServerSidePropsContext } from "next";

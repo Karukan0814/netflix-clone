@@ -1,5 +1,5 @@
 import { NavBar } from "@/component/NavBar";
-import { getMyListFromHasura } from "@/lib/VideoData";
+import { getMyListFromHasura } from "@/lib/videoData";
 import { VideoDataForSection, VideoInfoStats } from "@/lib/type/videoInfo";
 import { redirectUser } from "@/lib/utils";
 import { GetServerSidePropsContext } from "next";
@@ -22,7 +22,6 @@ type Props = {
 
 export default function Home(props: Props) {
   const { myList } = props;
-  console.log({ myList });
   return (
     <>
       <Head>

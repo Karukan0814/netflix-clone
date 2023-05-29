@@ -3,7 +3,7 @@ import {
   youtube_v3, // For every service client, there is an exported namespace
 } from "googleapis";
 import { getMyListbyUserId, getWatchedVideobyUser } from "./db/hasura";
-import { VideoDataForSection } from "./type/videoInfo";
+import { VideoDataForSection, VideoInfoStats } from "./type/videoInfo";
 
 const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 //   const [videoList, seTVideoList] = useState<VideoInfo>();
@@ -24,6 +24,7 @@ export const searchYoutubeList = async (query: string) => {
 
       if (response.status !== 200) {
         console.log("video fetch error", { response });
+        return null;
       }
 
       return results;
@@ -34,8 +35,8 @@ export const searchYoutubeList = async (query: string) => {
     })
     .finally();
 
-  if (response) {
-    const videoList = response?.items?.map((video) => {
+  if (response && response?.items) {
+    const videoList = response.items.map((video) => {
       const videoData: VideoDataForSection = {
         videoId: video.id?.videoId!,
         imgUrl: video.snippet?.thumbnails?.high?.url ?? "/static/ゆきこ２.png",
@@ -47,11 +48,7 @@ export const searchYoutubeList = async (query: string) => {
       };
       return videoData;
     });
-    if (videoList) {
-      return videoList;
-    } else {
-      return [];
-    }
+    return videoList;
   } else {
     return [];
   }
@@ -95,6 +92,7 @@ export const searchYoutubeVideos = async (
 
       if (response.status !== 200) {
         console.log("video fetch error", { response });
+        return null;
       }
       return results;
     })
@@ -104,8 +102,8 @@ export const searchYoutubeVideos = async (
     })
     .finally();
 
-  if (response) {
-    const videoList = response?.items?.map((video) => {
+  if (response && response.items) {
+    const videoList = response.items.map((video) => {
       const videoData: VideoDataForSection = {
         videoId: video.id!,
         imgUrl: video.snippet?.thumbnails?.high?.url ?? "/static/ゆきこ２.png",
@@ -117,11 +115,7 @@ export const searchYoutubeVideos = async (
       };
       return videoData;
     });
-    if (videoList) {
-      return videoList;
-    } else {
-      return [];
-    }
+    return videoList;
   } else {
     return [];
   }
@@ -132,23 +126,31 @@ export const getWatchedVideoFromHasura = async (
   userId: string
 ) => {
   const res = await getWatchedVideobyUser(token, userId);
-  const watchedVideoList = res.map((video) => {
-    const videoData: VideoDataForSection = {
-      videoId: video.videoId,
-      imgUrl: `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`,
-    };
-    return videoData;
-  });
-  return watchedVideoList;
+  if (res) {
+    const watchedVideoList = res.map((video) => {
+      const videoData: VideoDataForSection = {
+        videoId: video.videoId,
+        imgUrl: `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`,
+      };
+      return videoData;
+    });
+    return watchedVideoList;
+  } else {
+    return [];
+  }
 };
 
 export const getMyListFromHasura = async (token: string, userId: string) => {
-  const res = await getMyListbyUserId(token, userId);
-  const myList: VideoDataForSection[] = res.map((video) => {
-    return {
-      videoId: video.videoId,
-      imgUrl: `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`,
-    };
-  });
-  return myList;
+  const res: VideoInfoStats[] | null = await getMyListbyUserId(token, userId);
+  if (res) {
+    const myList: VideoDataForSection[] = res.map((video) => {
+      return {
+        videoId: video.videoId,
+        imgUrl: `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`,
+      };
+    });
+    return myList;
+  } else {
+    return [];
+  }
 };

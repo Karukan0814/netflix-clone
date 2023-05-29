@@ -2,26 +2,28 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import "material-icons/iconfont/material-icons.css";
 import { Roboto_Slab } from "next/font/google";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { createMagic } from "@/lib/magic-client";
-import { LoginuserContext } from "@/lib/UserContext";
+import { LoginuserContext } from "@/lib/userContext";
 import { Loading } from "@/component/Loading";
 const robotoSlab = Roboto_Slab({ subsets: ["latin"] });
 
 export default function App({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   // If isLoggedIn is true, set the UserContext with user data
   // Otherwise, redirect to /login and set UserContext to { user: null }
   useEffect(() => {
-    setLoading(false);
+    setLoading(true);
 
     const magic = createMagic();
 
     magic?.user.isLoggedIn().then((isLoggedIn) => {
+      console.log({ isLoggedIn });
       if (isLoggedIn) {
         magic.user.getMetadata().then((userData) => {
           setUser(userData.email);

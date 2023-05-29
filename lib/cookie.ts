@@ -1,5 +1,4 @@
 import { NextApiResponse } from "next";
-import { Ms_Madi } from "next/font/google";
 
 var cookie = require("cookie");
 
@@ -10,6 +9,15 @@ export const setTokenCookie = (token: string, res: NextApiResponse<any>) => {
     maxAge: MAX_AGE,
     expires: new Date(Date.now() + MAX_AGE * 1000),
     secure: process.env.NODE_ENV === "production",
+    path: "/",
+  });
+  res.setHeader("Set-Cookie", setCookie);
+};
+
+export const removeTokenCookie = (res: NextApiResponse<any>) => {
+  console.log("removeTokenCookie");
+  const setCookie = cookie.serialize("token", null, {
+    maxAge: -1,
     path: "/",
   });
   res.setHeader("Set-Cookie", setCookie);

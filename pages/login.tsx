@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { loginAfterLink, sendMailLink } from "@/lib/loginWithFirebase";
 import { createMagic } from "@/lib/magic-client";
 import { Magic, RPCError, RPCErrorCode } from "magic-sdk";
-import { LoginuserContext } from "@/lib/UserContext";
+import { LoginuserContext } from "@/lib/userContext";
 
 type FormValues = {
   email: string;
@@ -44,7 +44,6 @@ export default function login() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     console.log("handleLoginBtn", data.email);
-    // reset();
     const magic = createMagic();
     try {
       setIsLoading(true);

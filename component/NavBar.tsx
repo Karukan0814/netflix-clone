@@ -4,9 +4,9 @@ import React, { forwardRef, useContext, useEffect, useState } from "react";
 import styles from "./NavBar.module.css";
 import Link from "next/link";
 import Image from "next/image";
-import { LoginuserContext } from "@/lib/UserContext";
 import { createMagic } from "@/lib/magic-client";
 import { useRouter } from "next/router";
+import { LoginuserContext } from "@/lib/userContext";
 
 export const NavBar = () => {
   const [showDropDown, setShowDropDown] = useState(false);
@@ -15,38 +15,28 @@ export const NavBar = () => {
 
   const magic = createMagic();
 
-  const handleShowDropDown = () => {
-    setShowDropDown(!showDropDown);
-  };
-
   const handleSignOut = async (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
     e.preventDefault();
     try {
-      console.log(await magic?.user.isLoggedIn()); // => `false`
-      await magic?.user.logout();
+      await magic?.user.logout(); //magicLinkからログアウト
+
+      //cookieからtokenを削除
+
+      const res = await fetch("/api/logout", {
+        method: "POST",
+      });
     } catch {
       // Handle errors if required!
       console.log("something went wrong with sign out!");
     } finally {
       console.log("finally! jump to login");
+      setUser(null);
       router.push("/login");
     }
   };
 
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const user = await magic?.user.getMetadata();
-        const email = user?.email;
-        email && setUser(email);
-      } catch {
-        console.log("Failed Retrieving userdata");
-      }
-    };
-    getUser();
-  }, []);
   return (
     <div className={styles.navBarContainer}>
       <div className={styles.navBarWrapper}>

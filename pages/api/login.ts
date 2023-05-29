@@ -16,13 +16,7 @@ export default async function login(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const cookie = setTokenCookie(
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3N1ZXIiOiJkaWQ6ZXRocjoweDAzRjlDNDM5MjZCQzNkNTliQWQ4RmNCZjE1ODZmMzZBZTBEOTZBQzUiLCJwdWJsaWNBZGRyZXNzIjoiMHgwM0Y5QzQzOTI2QkMzZDU5YkFkOEZjQmYxNTg2ZjM2QWUwRDk2QUM1IiwiZW1haWwiOiJrb3NhbWVodXJ1YXNhQGdtYWlsLmNvbSIsIm9hdXRoUHJvdmlkZXIiOm51bGwsInBob25lTnVtYmVyIjpudWxsLCJ3YWxsZXRzIjpbXSwiaWF0IjoxNjg0Nzg3ODU3LCJleHAiOjE2ODUzOTI2NTcsImh0dHBzOi8vaGFzdXJhLmlvL2p3dC9jbGFpbXMiOnsieC1oYXN1cmEtZGVmYXVsdC1yb2xlIjoidXNlciIsIngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsidXNlciIsImFkbWluIl0sIngtaGFzdXJhLXVzZXItaWQiOiJkaWQ6ZXRocjoweDAzRjlDNDM5MjZCQzNkNTliQWQ4RmNCZjE1ODZmMzZBZTBEOTZBQzUifX0.0vHhmStAnBsvD-QnFXkHDk4u-Xa7WdXnAAai6oyCKCA",
-    res
-  );
-
   const auth = req.headers.authorization;
-  //   console.log(auth);
   const didToken = auth ? auth.substring(7) : "";
   if (req.method === "POST") {
     try {
@@ -53,6 +47,5 @@ export default async function login(
     } catch (error) {
       res.status(500).json({ done: false });
     }
-  } else {
   }
 }
