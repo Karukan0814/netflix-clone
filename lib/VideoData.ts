@@ -2,7 +2,8 @@ import {
   google, // The top level object used to access services
   youtube_v3, // For every service client, there is an exported namespace
 } from "googleapis";
-import { getWatchedVideobyUser } from "./db/hasura";
+import { getMyListbyUserId, getWatchedVideobyUser } from "./db/hasura";
+import { VideoDataForSection } from "./type/videoInfo";
 
 const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 //   const [videoList, seTVideoList] = useState<VideoInfo>();
@@ -24,6 +25,7 @@ export const searchYoutubeList = async (query: string) => {
       if (response.status !== 200) {
         console.log("video fetch error", { response });
       }
+
       return results;
     })
     .catch((error: any) => {
@@ -32,7 +34,27 @@ export const searchYoutubeList = async (query: string) => {
     })
     .finally();
 
-  return response;
+  if (response) {
+    const videoList = response?.items?.map((video) => {
+      const videoData: VideoDataForSection = {
+        videoId: video.id?.videoId!,
+        imgUrl: video.snippet?.thumbnails?.high?.url ?? "/static/ゆきこ２.png",
+        title: video.snippet?.title ?? "",
+        description: video.snippet?.description ?? "",
+        publishTime: video.snippet?.publishedAt ?? "",
+        channelTitle: video.snippet?.channelTitle ?? "",
+        statistics: "",
+      };
+      return videoData;
+    });
+    if (videoList) {
+      return videoList;
+    } else {
+      return [];
+    }
+  } else {
+    return [];
+  }
 };
 
 type Condition = {
@@ -51,7 +73,10 @@ const defaultCondition: Condition = {
   key: process.env.NEXT_PUBLIC_YOUTUBE_API_KEY,
 };
 
-export const searchVideos = async (popularFlag: boolean, id?: string) => {
+export const searchYoutubeVideos = async (
+  popularFlag: boolean,
+  id?: string
+) => {
   const service = google.youtube("v3");
 
   let searchCondition = { ...defaultCondition };
@@ -62,7 +87,7 @@ export const searchVideos = async (popularFlag: boolean, id?: string) => {
     searchCondition.id = [id];
   }
 
-  // Search.listメソッドの呼び出し
+  // Search.videosメソッドの呼び出し
   const response = await service.videos
     .list(searchCondition)
     .then((response) => {
@@ -79,13 +104,51 @@ export const searchVideos = async (popularFlag: boolean, id?: string) => {
     })
     .finally();
 
-  return response;
+  if (response) {
+    const videoList = response?.items?.map((video) => {
+      const videoData: VideoDataForSection = {
+        videoId: video.id!,
+        imgUrl: video.snippet?.thumbnails?.high?.url ?? "/static/ゆきこ２.png",
+        title: video.snippet?.title ?? "",
+        description: video.snippet?.description ?? "",
+        publishTime: video.snippet?.publishedAt ?? "",
+        channelTitle: video.snippet?.channelTitle ?? "",
+        statistics: video.statistics?.viewCount ?? "",
+      };
+      return videoData;
+    });
+    if (videoList) {
+      return videoList;
+    } else {
+      return [];
+    }
+  } else {
+    return [];
+  }
 };
 
 export const getWatchedVideoFromHasura = async (
   token: string,
   userId: string
 ) => {
-  const watchedVideoList = await getWatchedVideobyUser(token, userId);
+  const res = await getWatchedVideobyUser(token, userId);
+  const watchedVideoList = res.map((video) => {
+    const videoData: VideoDataForSection = {
+      videoId: video.videoId,
+      imgUrl: `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`,
+    };
+    return videoData;
+  });
   return watchedVideoList;
+};
+
+export const getMyListFromHasura = async (token: string, userId: string) => {
+  const res = await getMyListbyUserId(token, userId);
+  const myList: VideoDataForSection[] = res.map((video) => {
+    return {
+      videoId: video.videoId,
+      imgUrl: `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`,
+    };
+  });
+  return myList;
 };

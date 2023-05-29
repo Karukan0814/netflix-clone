@@ -14,14 +14,12 @@ export const NavBar = () => {
   const router = useRouter();
 
   const magic = createMagic();
-  // const [user, setUser] = useState("");
 
   const handleShowDropDown = () => {
     setShowDropDown(!showDropDown);
   };
 
   const handleSignOut = async (
-    // e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
     e.preventDefault();
@@ -66,7 +64,7 @@ export const NavBar = () => {
           <Link className={styles.navItem} href="/">
             Home
           </Link>
-          <Link className={styles.navItem} href="/myList">
+          <Link className={styles.navItem} href="/browse/myList">
             My List
           </Link>
         </ul>

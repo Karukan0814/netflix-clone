@@ -1,6 +1,31 @@
 import { MagicUserMetadata } from "magic-sdk";
 import { VideoInfoStats } from "../type/videoInfo";
 
+export async function getMyListbyUserId(token: string, userId: string) {
+  console.log("getMyListbyUserId");
+  const operation = `
+  query getMyListbyUserId ($userId: 
+    String!){
+    stats(where: {userId: {_eq: $userId}, favorited: {_eq: 1}}) {
+      favorited
+      userId
+      videoId
+      watched
+    }
+  }
+`;
+
+  const response = await fetchGraphQL(
+    operation,
+    "getMyListbyUserId",
+    { userId },
+    token
+  );
+  console.log(response?.data);
+  const resVideoInfos: VideoInfoStats[] = response?.data?.stats;
+  return resVideoInfos;
+}
+
 export async function getWatchedVideobyUser(token: string, userId: string) {
   console.log("getWatchedVideobyUser");
   const operation = `

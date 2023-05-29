@@ -28,7 +28,6 @@ export default async function login(
     try {
       const metaData: MagicUserMetadata =
         await magicAdmin.users.getMetadataByToken(didToken); //MagicLinkからユーザー情報を取得＊サーバーサイド
-      console.log({ metaData });
 
       const token = jwt.sign(
         {
@@ -43,8 +42,6 @@ export default async function login(
         },
         process.env.JWT_SECRET
       );
-
-      console.log({ token });
 
       //check if the user exists
       const newUseFlag = await isNewUser(token, metaData.issuer!); //hasura からユーザーデータ取得できるかどうか

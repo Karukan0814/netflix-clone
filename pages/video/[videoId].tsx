@@ -2,28 +2,30 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import styles from "../../styles/video.module.css";
-import { searchVideos } from "@/lib/VideoData";
+import { searchYoutubeVideos } from "@/lib/VideoData";
 import { GetStaticPropsContext } from "next";
 import { youtube_v3 } from "googleapis";
 import { NavBar } from "@/component/NavBar";
 import { LikeIcon } from "@/component/icons/LikeIcon";
-import { Favorited, VideoInfoStats } from "@/lib/type/videoInfo";
+import {
+  Favorited,
+  VideoDataForSection,
+  VideoInfoStats,
+} from "@/lib/type/videoInfo";
 
 Modal.setAppElement("#__next");
 
 export async function getStaticProps(staticProps: GetStaticPropsContext) {
   const { params } = staticProps;
-  let videoList;
+  let videoList: VideoDataForSection[] = [];
   if (params && params.videoId) {
-    videoList = await searchVideos(false, params.videoId.toString());
+    videoList = await searchYoutubeVideos(false, params.videoId.toString());
   }
-  let video = null;
-  if (videoList && videoList.items) {
-    video = videoList.items[0];
-  }
+
   return {
     props: {
-      video: video,
+      // video: videoList ? videoList[0] : null,
+      video: null,
     },
     revalidate: 10, // In seconds
   };
@@ -39,13 +41,12 @@ export async function getStaticPaths() {
 }
 
 type Props = {
-  video: youtube_v3.Schema$Video | null;
+  video: VideoDataForSection | null;
 };
 
 export default function Video(props: Props) {
   const router = useRouter();
-  const { video } = props;
-
+  let { video } = props;
   const { videoId } = router.query;
   // const [videoInfo, setVideoInfo] = useState<youtube_v3.Schema$Video | null>(
   //   null
@@ -134,33 +135,31 @@ export default function Video(props: Props) {
         </div>
 
         <div className={styles.modalBody}>
-          <div className={styles.modalBodyContent}>
-            <div className={styles.modalBodyCol1}>
-              <p className={styles.publishTime}>
-                {video?.snippet?.publishedAt}
-              </p>
-              <p className={styles.title}>{video?.snippet?.title}</p>
-              <p className={styles.description}>
-                {video?.snippet?.description}
-              </p>
-            </div>
-            <div className={styles.modalBodyCol2}>
-              <div className={styles.subTextWrapper}>
+          {video && (
+            <div className={styles.modalBodyContent}>
+              <div className={styles.modalBodyCol1}>
+                <p className={styles.publishTime}>{video.publishTime}</p>
+                <p className={styles.title}>{video.title}</p>
+                <p className={styles.description}>{video.description}</p>
+              </div>
+              <div className={styles.modalBodyCol2}>
+                <div className={styles.subTextWrapper}>
+                  <p className={styles.subText}>
+                    <span className={styles.subTextTitle}>
+                      ViewCount:{video.statistics}
+                    </span>
+                    <span className={styles.subTextContent}></span>
+                  </p>
+                </div>
                 <p className={styles.subText}>
                   <span className={styles.subTextTitle}>
-                    ViewCount:{video?.statistics?.viewCount}
+                    Cast:{video.channelTitle}
                   </span>
                   <span className={styles.subTextContent}></span>
                 </p>
               </div>
-              <p className={styles.subText}>
-                <span className={styles.subTextTitle}>
-                  Cast:{video?.snippet?.channelTitle}
-                </span>
-                <span className={styles.subTextContent}></span>
-              </p>
             </div>
-          </div>
+          )}
         </div>
       </Modal>
     </div>

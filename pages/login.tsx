@@ -64,12 +64,10 @@ export default function login() {
         });
 
         const loginRes = await res.json();
-        console.log({ loginRes });
         if (loginRes.done) {
           //Contextにユーザー情報を入れる
           let user = await magic?.user.getMetadata();
           setUser(user?.email ?? null);
-          console.log({ user });
           router.push("/");
         } else {
           setIsLoading(false);
