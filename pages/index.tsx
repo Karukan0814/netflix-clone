@@ -1,47 +1,61 @@
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { Banner } from "@/component/Banner";
 import { NavBar } from "@/component/NavBar";
 import { SectionCard } from "@/component/SectionCard";
 import {
-  searchPopularVideos,
+  getWatchedVideoFromHasura,
   searchYoutubeList,
-} from "@/lib/SearchYoutubeData";
-import {
-  youtube_v3, // For every service client, there is an exported namespace
-} from "googleapis";
+  searchYoutubeVideos,
+} from "@/lib/videoData";
 import Head from "next/head";
-import { useEffect } from "react";
-import { loginAfterLink } from "@/lib/loginWithFirebase";
+import { VideoDataForSection } from "@/lib/type/videoInfo";
+import { GetServerSidePropsContext } from "next";
+import { redirectUser } from "@/lib/utils";
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   console.log("getServerSideProps");
-  const disneyVideos = await searchYoutubeList("Disney");
+  const disneyVideos = await searchYoutubeList("Disney Official");
   const productivityVideos = await searchYoutubeList("Productivity");
   const travelVideos = await searchYoutubeList("Travel");
+  const popularVideos = await searchYoutubeVideos(true);
 
-  const popularVideos = await searchPopularVideos();
+  const token = context.req.cookies.token;
+
+  let userId = await redirectUser(token);
+
+  const watchedVideos = await getWatchedVideoFromHasura(token!, userId); //token was already checked by redirectUser
 
   return {
     props: {
-      disneyVideos: disneyVideos?.items ?? [],
-      productivityVideos: productivityVideos?.items ?? [],
-      travelVideos: travelVideos?.items ?? [],
-      popularVideos: popularVideos?.items ?? [],
+      disneyVideos,
+      productivityVideos,
+      travelVideos,
+      popularVideos,
+      watchedVideos,
     },
   };
 }
 
 type Props = {
-  disneyVideos: youtube_v3.Schema$SearchResult[];
-  productivityVideos: youtube_v3.Schema$SearchResult[];
-  travelVideos: youtube_v3.Schema$SearchResult[];
-  popularVideos: youtube_v3.Schema$Video[];
+  disneyVideos: VideoDataForSection[];
+  productivityVideos: VideoDataForSection[];
+  travelVideos: VideoDataForSection[];
+  popularVideos: VideoDataForSection[];
+  watchedVideos: VideoDataForSection[];
 };
 
 export default function Home(props: Props) {
-  const { disneyVideos, productivityVideos, travelVideos, popularVideos } =
-    props;
+  const {
+    disneyVideos,
+    productivityVideos,
+    travelVideos,
+    popularVideos,
+    watchedVideos,
+  } = props;
+
+  const bannerTitle = "平家物語";
+  const bannerId = "ZW40VnNrowY";
+  const bannerImg = "https://i.ytimg.com/vi/ZW40VnNrowY/sddefault.jpg";
 
   return (
     <>
@@ -51,13 +65,20 @@ export default function Home(props: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={styles.main}>
-        <NavBar userName="Saori" />
+        <NavBar />
         <Banner
-          title="Yukiko The Movie"
-          subTitle="Yukiko is a perfect girl!"
-          imgUrl="/static/ゆきこ１.png"
+          id={bannerId}
+          title={bannerTitle}
+          subTitle="Hot now!"
+          imgUrl={bannerImg}
         />
         <div className={styles.sectionWrapper}>
+          <SectionCard
+            title="Watched it again"
+            videoInfos={watchedVideos}
+            size="L"
+          />
+
           <SectionCard title="Disney" videoInfos={disneyVideos} size="L" />
           <SectionCard
             title="Productivity"

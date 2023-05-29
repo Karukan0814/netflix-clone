@@ -8,11 +8,12 @@ import { cardSize } from "@/lib/type/cardSizeTypes";
 type Props = {
   imgUrl: string;
   size: cardSize;
+  isScale?: boolean;
 };
 
 const defaultImg = "/static/ゆきこ２.png";
 export const Card = (props: Props) => {
-  const { imgUrl, size } = props;
+  const { imgUrl, size, isScale = true } = props;
 
   const [imgSrc, setImgSrc] = useState(imgUrl);
 
@@ -26,13 +27,15 @@ export const Card = (props: Props) => {
     console.log("ImageUrl Error!");
     setImgSrc(defaultImg);
   };
+
+  const shouldHover = isScale && {
+    whileHover: { scale: 1.2 },
+  };
   return (
     <div className={styles.cardContainer}>
       <motion.div
         className={`${sizeMap[size]} ${styles.motionWrapper}`}
-        whileHover={{
-          scale: 1.2,
-        }}
+        {...shouldHover}
       >
         <Image
           src={imgSrc}

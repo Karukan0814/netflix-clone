@@ -17,3 +17,6 @@
   margin-top: 1.5rem /* 24px */;
   margin-right: 0.75rem /* 12px */;
 }
+.wrap {
+  flex-wrap: wrap;
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "../styles/login.module.css";
 import Head from "next/head";
 import Link from "next/link";
@@ -6,6 +6,9 @@ import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/router";
 import { loginAfterLink, sendMailLink } from "@/lib/loginWithFirebase";
+import { createMagic } from "@/lib/magic-client";
+import { Magic, RPCError, RPCErrorCode } from "magic-sdk";
+import { LoginuserContext } from "@/lib/userContext";
 
 type FormValues = {
   email: string;
@@ -13,6 +16,9 @@ type FormValues = {
 
 export default function login() {
   const [isLoading, setIsLoading] = useState(false);
+  const [userMsg, setUserMsg] = useState("");
+
+  const { user, setUser } = useContext(LoginuserContext);
 
   const {
     register,
@@ -22,12 +28,6 @@ export default function login() {
   } = useForm<FormValues>();
 
   const router = useRouter();
-
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    console.log("handleLoginBtn");
-    reset();
-    sendMailLink(data.email);
-  };
 
   useEffect(() => {
     const handleComplete = () => {
@@ -42,17 +42,53 @@ export default function login() {
     };
   }, [router]);
 
-  useEffect(() => {
-    const login = async () => {
-      const loginResult = await loginAfterLink();
-      if (loginResult) {
-        router.push("/"); //Homeに遷移
-      }
-    };
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    console.log("handleLoginBtn", data.email);
+    const magic = createMagic();
+    try {
+      setIsLoading(true);
+      // Trigger Magic link to be sent to user
+      let didToken = await magic?.auth.loginWithMagicLink({
+        email: data.email,
+        // redirectURI: new URL("/", window.location.origin).href, // optional redirect back to your app after magic link is clicked
+      });
 
-    console.log("start-login");
-    login();
-  }, []);
+      if (didToken) {
+        const res = await fetch("/api/login", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${didToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const loginRes = await res.json();
+        if (loginRes.done) {
+          //Contextにユーザー情報を入れる
+          let user = await magic?.user.getMetadata();
+          setUser(user?.email ?? null);
+          router.push("/");
+        } else {
+          setIsLoading(false);
+          setUserMsg("Something went wrong with login");
+        }
+      }
+    } catch (err) {
+      if (err instanceof RPCError) {
+        switch (err.code) {
+          case RPCErrorCode.MagicLinkFailedVerification:
+          case RPCErrorCode.MagicLinkExpired:
+          case RPCErrorCode.MagicLinkRateLimited:
+          case RPCErrorCode.UserAlreadyLoggedIn:
+            // Handle errors accordingly :)
+            break;
+        }
+      }
+    } finally {
+      reset();
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -78,7 +114,7 @@ export default function login() {
         <div className={styles.mainWrapper}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <h1 className={styles.signinHeader}>Sign in</h1>
-
+            {userMsg && <p>{userMsg}</p>}
             <input
               className={styles.emailInput}
               placeholder="email address"
@@ -90,10 +126,15 @@ export default function login() {
                 },
               })}
               type="email"
+              disabled={isLoading}
             />
 
-            <button type="submit" className={styles.signInButton}>
-              Sign in
+            <button
+              type="submit"
+              className={styles.signInButton}
+              disabled={isLoading}
+            >
+              {isLoading ? "Loading..." : "Sign in"}
             </button>
           </form>
         </div>

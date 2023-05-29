@@ -7,27 +7,46 @@ import {
   youtube_v3, // For every service client, there is an exported namespace
 } from "googleapis";
 import { cardSize } from "@/lib/type/cardSizeTypes";
+import Link from "next/link";
+import { VideoDataForSection } from "@/lib/type/videoInfo";
 
 type Props = {
   title: string;
-  videoInfos: youtube_v3.Schema$SearchResult[] | youtube_v3.Schema$Video[];
+  videoInfos: VideoDataForSection[];
   size: cardSize;
+  isWrap?: boolean;
+  isScale?: boolean;
 };
 
 export const SectionCard = (props: Props) => {
-  const { title, videoInfos = [], size } = props;
+  const {
+    title,
+    videoInfos = [],
+    size,
+    isWrap = false,
+    isScale = true,
+  } = props;
 
   return (
     <section className={styles.cardSectionContainer}>
       <h2 className={styles.sectionTitle}>{title}</h2>
-      <div className={styles.cardsWrapper}>
+      <div className={`${styles.cardsWrapper} ${isWrap && styles.wrap}`}>
         {videoInfos.map((el, index) => {
-          let imgUrl = el.snippet?.thumbnails?.high?.url;
+          let imgUrl = el.imgUrl;
           if (!imgUrl) {
             imgUrl = "/static/ゆきこ２.png";
           }
 
-          return <Card key={index} size={size} imgUrl={imgUrl} />;
+          return (
+            <Link href={`/video/${el.videoId}`} key={el.videoId}>
+              <Card
+                key={el.videoId}
+                size={size}
+                imgUrl={imgUrl}
+                isScale={isScale}
+              />
+            </Link>
+          );
         })}
       </div>
     </section>
