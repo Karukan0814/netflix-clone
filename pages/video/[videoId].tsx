@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import styles from "../../styles/video.module.css";
-import { searchYoutubeVideos } from "@/lib/videoData";
 import { GetStaticPropsContext } from "next";
 import { youtube_v3 } from "googleapis";
 import { NavBar } from "@/component/NavBar";
@@ -12,6 +11,7 @@ import {
   VideoDataForSection,
   VideoInfoStats,
 } from "@/lib/type/videoInfo";
+import { searchYoutubeVideos } from "@/lib/VideoData";
 
 Modal.setAppElement("#__next");
 
