@@ -2,18 +2,18 @@ import styles from "../styles/Home.module.css";
 import { Banner } from "@/component/Banner";
 import { NavBar } from "@/component/NavBar";
 import { SectionCard } from "@/component/SectionCard";
-import {
-  getWatchedVideoFromHasura,
-  searchYoutubeList,
-  searchYoutubeVideos,
-} from "@/lib/videoData";
+
 import Head from "next/head";
 import { VideoDataForSection } from "@/lib/type/videoInfo";
 import { GetServerSidePropsContext } from "next";
 import { redirectUser } from "@/lib/utils";
+import {
+  getWatchedVideoFromHasura,
+  searchYoutubeList,
+  searchYoutubeVideos,
+} from "@/lib/VideoData";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  console.log("getServerSideProps");
   const disneyVideos = await searchYoutubeList("Disney Official");
   const productivityVideos = await searchYoutubeList("Productivity");
   const travelVideos = await searchYoutubeList("Travel");

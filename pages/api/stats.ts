@@ -24,7 +24,6 @@ export default async function stats(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  console.log({ cookies: req.cookies });
   try {
     if (!req.cookies.token) {
       //tokenなかった場合エラー
@@ -41,7 +40,6 @@ export default async function stats(
       if (videoId) {
         //videoIdが取得出来た場合
         const decoded = jwt.verify(token, process.env.JWT_SECRET); //tokenをでコード
-        console.log({ decoded });
 
         //videoIdからstatsのvideo情報を検索
         const videoInfos = await findVideobyUser(
@@ -49,8 +47,7 @@ export default async function stats(
           decoded.issuer,
           videoId
         );
-        console.log(videoInfos);
-        const doesStatsExist = videoInfos.length > 0;
+        const doesStatsExist = videoInfos && videoInfos.length > 0;
         if (req.method === "POST") {
           //POSTの場合、UPDATE or Insert処理
 

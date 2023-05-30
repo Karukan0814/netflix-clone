@@ -29,9 +29,8 @@ export const NavBar = () => {
       });
     } catch {
       // Handle errors if required!
-      console.log("something went wrong with sign out!");
+      console.error("something went wrong with sign out!");
     } finally {
-      console.log("finally! jump to login");
       setUser(null);
       router.push("/login");
     }

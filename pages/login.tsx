@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/router";
-import { loginAfterLink, sendMailLink } from "@/lib/loginWithFirebase";
 import { createMagic } from "@/lib/magic-client";
 import { Magic, RPCError, RPCErrorCode } from "magic-sdk";
 import { LoginuserContext } from "@/lib/userContext";
@@ -43,7 +42,6 @@ export default function login() {
   }, [router]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    console.log("handleLoginBtn", data.email);
     const magic = createMagic();
     try {
       setIsLoading(true);

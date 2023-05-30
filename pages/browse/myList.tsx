@@ -1,11 +1,11 @@
 import { NavBar } from "@/component/NavBar";
-import { getMyListFromHasura } from "@/lib/videoData";
 import { VideoDataForSection, VideoInfoStats } from "@/lib/type/videoInfo";
 import { redirectUser } from "@/lib/utils";
 import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import styles from "../../styles/mylist.module.css";
 import { SectionCard } from "@/component/SectionCard";
+import { getMyListFromHasura } from "@/lib/VideoData";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const token = context.req.cookies.token;

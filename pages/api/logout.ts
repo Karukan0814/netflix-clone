@@ -18,7 +18,6 @@ export default async function logout(
 ) {
   if (req.method === "POST") {
     try {
-      console.log("api logout");
       const cookie = removeTokenCookie(res);
 
       res.status(200).json({ done: true });

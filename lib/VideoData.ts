@@ -23,14 +23,14 @@ export const searchYoutubeList = async (query: string) => {
       var results = response.data;
 
       if (response.status !== 200) {
-        console.log("video fetch error", { response });
+        console.error("video fetch error", { response });
         return null;
       }
 
       return results;
     })
     .catch((error: any) => {
-      console.log(error);
+      console.error("Something went wrong with search youtube", error);
       return null;
     })
     .finally();
@@ -91,13 +91,13 @@ export const searchYoutubeVideos = async (
       var results = response.data;
 
       if (response.status !== 200) {
-        console.log("video fetch error", { response });
+        console.error("video fetch error", { response });
         return null;
       }
       return results;
     })
     .catch((error: any) => {
-      console.log(error);
+      console.error("Something went wrong with searching video", error);
       return null;
     })
     .finally();
