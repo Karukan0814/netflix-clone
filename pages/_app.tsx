@@ -12,7 +12,7 @@ const robotoSlab = Roboto_Slab({ subsets: ["latin"] });
 export default function App({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<string | null>(null);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   // If isLoggedIn is true, set the UserContext with user data
@@ -27,6 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
         magic.user.getMetadata().then((userData) => {
           setUser(userData.email);
         });
+        router.push("/");
       } else {
         router.push("/login");
 
