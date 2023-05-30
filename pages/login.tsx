@@ -7,7 +7,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/router";
 import { createMagic } from "@/lib/magic-client";
 import { Magic, RPCError, RPCErrorCode } from "magic-sdk";
-import { LoginuserContext } from "@/lib/userContext";
+import { LoginuserContext } from "@/lib/UserContext";
 
 type FormValues = {
   email: string;

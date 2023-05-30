@@ -5,7 +5,7 @@ import { Roboto_Slab } from "next/font/google";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { createMagic } from "@/lib/magic-client";
-import { LoginuserContext } from "@/lib/userContext";
+import { LoginuserContext } from "@/lib/UserContext";
 import { Loading } from "@/component/Loading";
 const robotoSlab = Roboto_Slab({ subsets: ["latin"] });
 

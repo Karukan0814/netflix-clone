@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { createMagic } from "@/lib/magic-client";
 import { useRouter } from "next/router";
-import { LoginuserContext } from "@/lib/userContext";
+import { LoginuserContext } from "@/lib/UserContext";
 
 export const NavBar = () => {
   const [showDropDown, setShowDropDown] = useState(false);
