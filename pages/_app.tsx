@@ -23,7 +23,6 @@ export default function App({ Component, pageProps }: AppProps) {
     const magic = createMagic();
 
     magic?.user.isLoggedIn().then((isLoggedIn) => {
-      console.log({ isLoggedIn });
       if (isLoggedIn) {
         magic.user.getMetadata().then((userData) => {
           setUser(userData.email);

@@ -13,7 +13,6 @@ import { GetServerSidePropsContext } from "next";
 import { redirectUser } from "@/lib/utils";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  console.log("getServerSideProps");
   const disneyVideos = await searchYoutubeList("Disney Official");
   const productivityVideos = await searchYoutubeList("Productivity");
   const travelVideos = await searchYoutubeList("Travel");

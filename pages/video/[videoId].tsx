@@ -81,9 +81,7 @@ export default function Video(props: Props) {
   };
 
   useEffect(() => {
-    console.log("useEffect videoId");
     const fetchVideoUserInfo = async () => {
-      console.log("fetchVideoUserInfo");
       const res = await fetch(`/api/stats?videoId=${videoId}`, {
         method: "GET",
 

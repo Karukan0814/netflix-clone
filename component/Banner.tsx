@@ -17,7 +17,6 @@ export const Banner = (props: Props) => {
   const router = useRouter();
 
   const handleOnPlay = () => {
-    console.log("handleOnPlay");
     router.push(`/video/${id}`);
   };
   return (

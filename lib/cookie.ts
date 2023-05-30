@@ -15,7 +15,6 @@ export const setTokenCookie = (token: string, res: NextApiResponse<any>) => {
 };
 
 export const removeTokenCookie = (res: NextApiResponse<any>) => {
-  console.log("removeTokenCookie");
   const setCookie = cookie.serialize("token", null, {
     maxAge: -1,
     path: "/",
