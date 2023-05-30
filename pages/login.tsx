@@ -13,7 +13,7 @@ type FormValues = {
   email: string;
 };
 
-export default function login() {
+export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [userMsg, setUserMsg] = useState("");
 
