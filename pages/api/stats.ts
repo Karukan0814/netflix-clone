@@ -67,7 +67,7 @@ export default async function stats(
             const videoInfo = await insertStats(
               token,
               decoded.issuer,
-              1,
+              favourited,
               true,
               videoId!
             );
