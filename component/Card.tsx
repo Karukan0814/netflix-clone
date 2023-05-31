@@ -24,7 +24,7 @@ export const Card = (props: Props) => {
   };
 
   const handleOnError = () => {
-    console.log("ImageUrl Error!");
+    console.log(`ImageUrl Error! ${imgUrl}`);
     setImgSrc(defaultImg);
   };
 
