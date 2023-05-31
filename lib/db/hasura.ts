@@ -24,7 +24,7 @@ export async function getMyListbyUserId(token: string, userId: string) {
     const resVideoInfos: VideoInfoStats[] = response?.data?.stats;
     return resVideoInfos;
   } else {
-    return null;
+    return [];
   }
 }
 
