@@ -51,7 +51,7 @@ export async function getWatchedVideobyUser(token: string, userId: string) {
     const resVideoInfos: VideoInfoStats[] = response?.data?.stats;
     return resVideoInfos;
   } else {
-    return null;
+    return [];
   }
 }
 
@@ -142,7 +142,7 @@ export async function findVideobyUser(
     const resVideoInfos: VideoInfoStats[] = response?.data?.stats;
     return resVideoInfos;
   } else {
-    return null;
+    return [];
   }
 }
 

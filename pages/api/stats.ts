@@ -51,7 +51,7 @@ export default async function stats(
         if (req.method === "POST") {
           //POSTの場合、UPDATE or Insert処理
 
-          const { favourited, watched = false } = req.body;
+          const { favourited, watched = true } = req.body;
           if (doesStatsExist) {
             //update
             const videoInfos = await updateStats(
@@ -68,7 +68,7 @@ export default async function stats(
               token,
               decoded.issuer,
               1,
-              false,
+              true,
               videoId!
             );
             const videoInfos: VideoInfoStats[] = [];
@@ -78,11 +78,7 @@ export default async function stats(
           }
         } else {
           //GETの場合
-          if (doesStatsExist) {
-            res.status(200).json({ videoInfos: videoInfos });
-          } else {
-            res.status(404).json({ msg: "Video not found" });
-          }
+          res.status(200).json({ videoInfos: videoInfos });
         }
       } else {
         res.status(400).json({ msg: "Please send videoId" });
