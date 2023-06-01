@@ -20,7 +20,7 @@ export async function getStaticProps(staticProps: GetStaticPropsContext) {
 
   return {
     props: {
-      video: videoList ? videoList[0] : null,
+      video: videoList && videoList.length > 0 ? videoList[0] : null,
     },
     revalidate: 10, // In seconds
   };
@@ -49,8 +49,6 @@ export default function Video(props: Props) {
   const [watched, setWatched] = useState(false);
 
   const onHandlePlay: YouTubeProps["onPlay"] = async (event) => {
-    // access to player in all event handlers via event.target
-
     const res = await fetch("/api/stats", {
       method: "POST",
       body: JSON.stringify({
@@ -66,7 +64,6 @@ export default function Video(props: Props) {
     height: "360",
     width: "100%",
     playerVars: {
-      // https://developers.google.com/youtube/player_parameters
       autoplay: 0,
       modestbranding: 1,
       rel: 0,

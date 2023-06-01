@@ -43,7 +43,7 @@ export default async function stats(
           //POSTの場合、UPDATE or Insert処理
 
           let { favourited, watched } = req.body;
-          if (favourited === null || favourited === undefined) {
+          if (favourited === undefined) {
             //動画再生時
             favourited = doesStatsExist ? videoInfos[0].favorited : null;
           } else {
