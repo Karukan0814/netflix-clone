@@ -10,22 +10,3 @@ export const createMagic = () => {
     });
   }
 };
-
-// Pass in your publishable key from your .env file
-// export const magic = createMagic(
-//   process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY!
-// );
-
-// Create client-side Magic instance
-// const createMagic = (key: string) => {
-//   return (
-//     typeof window != "undefined" &&
-//     new Magic(key, {
-//       extensions: [new OAuthExtension()],
-//     })
-//   );
-// };
-
-// export const magic = createMagic(
-//   process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY!
-// );
