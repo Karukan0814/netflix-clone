@@ -63,6 +63,7 @@ export default function Home(props: Props) {
         <title>Netflix Clone</title>
         <meta name="description" content="This site is a clone of Netflix" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
         <NavBar />

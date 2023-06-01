@@ -27,6 +27,7 @@ export default function Home(props: Props) {
       <Head>
         <title>Netflix Clone My List</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
         <NavBar />

@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/router";
 import { createMagic } from "@/lib/magic-client";
-import { Magic, RPCError, RPCErrorCode } from "magic-sdk";
+import { RPCError, RPCErrorCode } from "magic-sdk";
 import { LoginuserContext } from "@/lib/UserContext";
 
 type FormValues = {
@@ -92,6 +92,7 @@ export default function Login() {
     <div className={styles.container}>
       <Head>
         <title>Netflix Clone</title>
+        <link rel="icon" href="/favicon.ico" />
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
