@@ -1,5 +1,5 @@
 import { NavBar } from "@/component/NavBar";
-import { VideoDataForSection, VideoInfoStats } from "@/lib/type/videoInfo";
+import { VideoDataForSection } from "@/lib/type/videoInfo";
 import { redirectUser } from "@/lib/utils";
 import { GetServerSidePropsContext } from "next";
 import Head from "next/head";

@@ -1,10 +1,4 @@
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useState,
-} from "react";
+import { createContext, Dispatch, SetStateAction } from "react";
 
 export type LoginUserContextType = {
   user: string | null;

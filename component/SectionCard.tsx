@@ -3,9 +3,6 @@
 import React from "react";
 import styles from "./SectionCard.module.css";
 import { Card } from "./Card";
-import {
-  youtube_v3, // For every service client, there is an exported namespace
-} from "googleapis";
 import { cardSize } from "@/lib/type/cardSizeTypes";
 import Link from "next/link";
 import { VideoDataForSection } from "@/lib/type/videoInfo";

@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import React from "react";
 import styles from "./Banner.module.css";
 import { useRouter } from "next/router";

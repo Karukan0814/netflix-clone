@@ -1,8 +1,5 @@
-import { removeTokenCookie, setTokenCookie } from "@/lib/cookie";
-import { createNewUser, isNewUser } from "@/lib/db/hasura";
-import { magicAdmin } from "@/lib/magic";
+import { removeTokenCookie } from "@/lib/cookie";
 import { Magic } from "@magic-sdk/admin";
-import { MagicUserMetadata } from "magic-sdk";
 import { NextApiRequest, NextApiResponse } from "next";
 var jwt = require("jsonwebtoken");
 

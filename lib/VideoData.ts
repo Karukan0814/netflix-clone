@@ -1,6 +1,5 @@
 import {
   google, // The top level object used to access services
-  youtube_v3, // For every service client, there is an exported namespace
 } from "googleapis";
 import { getMyListbyUserId, getWatchedVideobyUser } from "./db/hasura";
 import { VideoDataForSection, VideoInfoStats } from "./type/videoInfo";
