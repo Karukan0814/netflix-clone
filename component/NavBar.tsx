@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import styles from "./NavBar.module.css";
 import Link from "next/link";
 import Image from "next/image";
