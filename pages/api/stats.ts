@@ -1,15 +1,6 @@
-import { setTokenCookie } from "@/lib/cookie";
-import {
-  createNewUser,
-  findVideobyUser,
-  insertStats,
-  isNewUser,
-  updateStats,
-} from "@/lib/db/hasura";
-import { magicAdmin } from "@/lib/magic";
+import { findVideobyUser, insertStats, updateStats } from "@/lib/db/hasura";
 import { VideoInfoStats } from "@/lib/type/videoInfo";
 import { Magic } from "@magic-sdk/admin";
-import { MagicUserMetadata } from "magic-sdk";
 import { NextApiRequest, NextApiResponse } from "next";
 var jwt = require("jsonwebtoken");
 
@@ -51,30 +42,37 @@ export default async function stats(
         if (req.method === "POST") {
           //POSTの場合、UPDATE or Insert処理
 
-          const { favourited, watched = true } = req.body;
+          let { favourited, watched } = req.body;
+          if (favourited === null || favourited === undefined) {
+            //動画再生時
+            favourited = doesStatsExist ? videoInfos[0].favorited : null;
+          } else {
+            //likeFlagの操作の場合
+            watched = doesStatsExist ? videoInfos[0].watched : false;
+          }
           if (doesStatsExist) {
             //update
-            const videoInfos = await updateStats(
+            const videoInfosChanged = await updateStats(
               token,
               decoded.issuer,
               favourited,
               watched,
               videoId!
             );
-            res.status(200).json({ videoInfos });
+            res.status(200).json({ videoInfos: videoInfosChanged });
           } else {
             //add
             const videoInfo = await insertStats(
               token,
               decoded.issuer,
               favourited,
-              true,
+              watched,
               videoId!
             );
-            const videoInfos: VideoInfoStats[] = [];
-            videoInfos.push(videoInfo);
+            const videoInfosChanged: VideoInfoStats[] = [];
+            videoInfosChanged.push(videoInfo);
 
-            res.status(200).json({ videoInfos });
+            res.status(200).json({ videoInfos: videoInfosChanged });
           }
         } else {
           //GETの場合

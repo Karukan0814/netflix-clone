@@ -3,15 +3,11 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import styles from "../../styles/video.module.css";
 import { GetStaticPropsContext } from "next";
-import { youtube_v3 } from "googleapis";
 import { NavBar } from "@/component/NavBar";
 import { LikeIcon } from "@/component/icons/LikeIcon";
-import {
-  Favorited,
-  VideoDataForSection,
-  VideoInfoStats,
-} from "@/lib/type/videoInfo";
+import { Favorited, VideoDataForSection } from "@/lib/type/videoInfo";
 import { searchYoutubeVideos } from "@/lib/VideoData";
+import YouTube, { YouTubeProps } from "react-youtube";
 
 Modal.setAppElement("#__next");
 
@@ -47,12 +43,36 @@ export default function Video(props: Props) {
   const router = useRouter();
   let { video } = props;
   const { videoId } = router.query;
-  // const [videoInfo, setVideoInfo] = useState<youtube_v3.Schema$Video | null>(
-  //   null
-  // );
+
   const [error, setError] = useState("");
   const [favorited, setFavorited] = useState<Favorited>(null);
   const [watched, setWatched] = useState(false);
+
+  const onHandlePlay: YouTubeProps["onPlay"] = async (event) => {
+    // access to player in all event handlers via event.target
+
+    const res = await fetch("/api/stats", {
+      method: "POST",
+      body: JSON.stringify({
+        videoId,
+        watched: true,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+  const opts: YouTubeProps["opts"] = {
+    height: "360",
+    width: "100%",
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 0,
+      modestbranding: 1,
+      rel: 0,
+    },
+    onplay: { onHandlePlay },
+  };
 
   const handleLikeflag = () => {
     let changedVal: Favorited = favorited === 1 ? null : 1;
@@ -114,14 +134,12 @@ export default function Video(props: Props) {
         overlayClassName={styles.overlay}
       >
         <div className={styles.videoContainer}>
-          <iframe
-            id="ytplayer"
-            className={styles.videoPlayer}
-            width="90%"
-            height="360"
-            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&origin=http://example.com&rel=0`}
-            frameBorder="0"
-          ></iframe>
+          <YouTube
+            videoId={videoId?.toString()}
+            opts={opts}
+            onPlay={onHandlePlay}
+            style={{ width: "90%" }}
+          />
           <div className={styles.likeDislikeWrapper}>
             <LikeIcon
               handleLikeflag={handleLikeflag}

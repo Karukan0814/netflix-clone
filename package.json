@@ -30,6 +30,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
     "react-modal": "^3.16.1",
+    "react-youtube": "^10.1.0",
     "typescript": "5.0.4"
   },
   "devDependencies": {
