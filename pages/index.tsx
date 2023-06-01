@@ -15,7 +15,7 @@ import {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const disneyVideos = await searchYoutubeList("Disney Official");
-  const productivityVideos = await searchYoutubeList("Productivity");
+  // const productivityVideos = await searchYoutubeList("Productivity");
   const travelVideos = await searchYoutubeList("Travel");
   const popularVideos = await searchYoutubeVideos(true);
 
@@ -28,7 +28,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       disneyVideos,
-      productivityVideos,
+      // productivityVideos,
       travelVideos,
       popularVideos,
       watchedVideos,
@@ -38,7 +38,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 type Props = {
   disneyVideos: VideoDataForSection[];
-  productivityVideos: VideoDataForSection[];
+  // productivityVideos: VideoDataForSection[];
   travelVideos: VideoDataForSection[];
   popularVideos: VideoDataForSection[];
   watchedVideos: VideoDataForSection[];
@@ -47,7 +47,7 @@ type Props = {
 export default function Home(props: Props) {
   const {
     disneyVideos,
-    productivityVideos,
+    // productivityVideos,
     travelVideos,
     popularVideos,
     watchedVideos,
@@ -81,11 +81,11 @@ export default function Home(props: Props) {
           />
 
           <SectionCard title="Disney" videoInfos={disneyVideos} size="L" />
-          <SectionCard
+          {/* <SectionCard
             title="Productivity"
             videoInfos={productivityVideos}
             size="M"
-          />
+          /> */}
           <SectionCard title="Travel" videoInfos={travelVideos} size="S" />
 
           <SectionCard title="Popular" videoInfos={popularVideos} size="S" />
